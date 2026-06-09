@@ -32,6 +32,7 @@ Route::middleware(['auth', 'two-factor'])->group(function () {
     Route::get('/projects/{project}', ProjectShow::class)->name('projects.show');
     Route::get('/projects/{project}/edit', ProjectEdit::class)->middleware('admin')->name('projects.edit');
     Route::get('/projects/{project}/settings', ProjectSettings::class)->middleware('admin')->name('projects.settings');
+    Route::get('/projects/{project}/export', \App\Http\Controllers\ProjectExportController::class)->name('projects.export');
 
     // Attachment file serving (local disk, private)
     Route::get('/attachments/{attachment}', function (\App\Models\TaskAttachment $attachment) {

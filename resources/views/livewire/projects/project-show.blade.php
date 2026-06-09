@@ -1,4 +1,4 @@
-<div class="flex flex-col h-full" x-data="kanban(@this)">
+<div class="flex flex-col h-full" x-data="kanban(@this)" @download-export.window="window.location.href = $event.detail.url">
 
     {{-- Top bar --}}
     <div class="flex-shrink-0 flex items-center gap-4 px-6 h-14 border-b border-gray-800 bg-gray-900">
@@ -52,6 +52,15 @@
                 List
             </button>
         </div>
+
+        {{-- Export --}}
+        <button wire:click="openExportModal"
+                class="flex items-center gap-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 hover:text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+            </svg>
+            Export
+        </button>
 
         @if(auth()->user()->isAdmin())
         <button wire:click="$set('showNewTaskModal', true)"
@@ -935,6 +944,116 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    {{-- EXPORT MODAL --}}
+    @if($showExportModal)
+    <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+         wire:click.self="closeExportModal">
+        <div class="bg-gray-900 border border-gray-800 rounded-xl w-full max-w-sm shadow-2xl">
+
+            {{-- Header --}}
+            <div class="flex items-center justify-between px-5 py-4 border-b border-gray-800">
+                <h2 class="text-sm font-semibold text-white">Export Tasks</h2>
+                <button wire:click="closeExportModal"
+                        class="text-gray-500 hover:text-gray-300 transition-colors p-1 rounded-lg hover:bg-gray-800">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            {{-- Body --}}
+            <div class="p-5 space-y-5">
+
+                {{-- Format --}}
+                <div>
+                    <label class="block text-xs text-gray-500 mb-2">Format</label>
+                    <div class="flex gap-5">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" wire:model="exportFormat" value="excel"
+                                   class="text-indigo-500 bg-gray-800 border-gray-600 focus:ring-indigo-500 focus:ring-offset-gray-900">
+                            <span class="text-sm text-gray-300">Excel (.xlsx)</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" wire:model="exportFormat" value="word"
+                                   class="text-indigo-500 bg-gray-800 border-gray-600 focus:ring-indigo-500 focus:ring-offset-gray-900">
+                            <span class="text-sm text-gray-300">Word (.docx)</span>
+                        </label>
+                    </div>
+                </div>
+
+                {{-- Types --}}
+                <div>
+                    <label class="block text-xs text-gray-500 mb-2">
+                        Types
+                        <span class="text-gray-700 ml-1">— leave all unchecked for all</span>
+                    </label>
+                    <div class="grid grid-cols-2 gap-1.5">
+                        @foreach(['bug' => 'Bug', 'feature' => 'Feature', 'improvement' => 'Improvement', 'chore' => 'Chore', 'question' => 'Question'] as $value => $label)
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" wire:model="exportTypes" value="{{ $value }}"
+                                   class="rounded text-indigo-500 bg-gray-800 border-gray-600 focus:ring-indigo-500 focus:ring-offset-gray-900">
+                            <span class="text-sm text-gray-300">{{ $label }}</span>
+                        </label>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Priorities --}}
+                <div>
+                    <label class="block text-xs text-gray-500 mb-2">
+                        Priorities
+                        <span class="text-gray-700 ml-1">— leave all unchecked for all</span>
+                    </label>
+                    <div class="grid grid-cols-2 gap-1.5">
+                        @foreach(['critical' => 'Critical', 'high' => 'High', 'medium' => 'Medium', 'low' => 'Low'] as $value => $label)
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" wire:model="exportPriorities" value="{{ $value }}"
+                                   class="rounded text-indigo-500 bg-gray-800 border-gray-600 focus:ring-indigo-500 focus:ring-offset-gray-900">
+                            <span class="text-sm text-gray-300">{{ $label }}</span>
+                        </label>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Statuses --}}
+                <div>
+                    <label class="block text-xs text-gray-500 mb-2">
+                        Statuses
+                        <span class="text-gray-700 ml-1">— leave all unchecked for all</span>
+                    </label>
+                    <div class="grid grid-cols-2 gap-1.5">
+                        @foreach($project->statuses as $status)
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" wire:model="exportStatuses" value="{{ $status->id }}"
+                                   class="rounded text-indigo-500 bg-gray-800 border-gray-600 focus:ring-indigo-500 focus:ring-offset-gray-900">
+                            <span class="flex items-center gap-1.5 text-sm text-gray-300">
+                                <span class="w-2 h-2 rounded-full flex-shrink-0" style="background-color: {{ $status->color }}"></span>
+                                {{ $status->name }}
+                            </span>
+                        </label>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            {{-- Footer --}}
+            <div class="flex items-center justify-end gap-3 px-5 py-4 border-t border-gray-800">
+                <button wire:click="closeExportModal"
+                        class="text-sm text-gray-400 hover:text-gray-200 transition-colors px-4 py-2">
+                    Cancel
+                </button>
+                <button wire:click="doExport"
+                        class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-5 py-2 rounded-lg transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                    </svg>
+                    Download
+                </button>
             </div>
         </div>
     </div>

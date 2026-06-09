@@ -24,6 +24,13 @@ class ProjectShow extends Component
     public array $filterCategories = [];
     public string $search = '';
 
+    // Export modal
+    public bool $showExportModal = false;
+    public string $exportFormat = 'excel';
+    public array $exportTypes = [];
+    public array $exportPriorities = [];
+    public array $exportStatuses = [];
+
     // List-view specific
     public string $listFilterStatus = 'open'; // 'open' | 'all' | numeric status_id
     public string $listSortColumn = 'position';
@@ -374,6 +381,32 @@ class ProjectShow extends Component
 
         $this->selectedTask->update([$flag => !$this->selectedTask->$flag]);
         $this->selectedTask = $this->selectedTask->fresh($this->freshRelations());
+    }
+
+    public function openExportModal(): void
+    {
+        $this->exportTypes = [];
+        $this->exportPriorities = [];
+        $this->exportStatuses = [];
+        $this->exportFormat = 'excel';
+        $this->showExportModal = true;
+    }
+
+    public function closeExportModal(): void
+    {
+        $this->showExportModal = false;
+    }
+
+    public function doExport(): void
+    {
+        $params = ['format' => $this->exportFormat];
+        if ($this->exportTypes)      { $params['types']      = $this->exportTypes; }
+        if ($this->exportPriorities) { $params['priorities'] = $this->exportPriorities; }
+        if ($this->exportStatuses)   { $params['statuses']   = $this->exportStatuses; }
+
+        $url = route('projects.export', $this->project) . '?' . http_build_query($params);
+        $this->showExportModal = false;
+        $this->dispatch('download-export', url: $url);
     }
 
     public function render()
