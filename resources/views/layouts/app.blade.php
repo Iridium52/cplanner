@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>{{ $title ?? config('app.name') }} — C Planner</title>
+        <link rel="icon" type="image/png" href="/images/logo.png">
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet"/>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -16,11 +17,7 @@
             <aside class="w-60 flex-shrink-0 bg-gray-900 border-r border-gray-800 flex flex-col">
                 {{-- Logo --}}
                 <div class="flex items-center gap-2 px-4 h-14 border-b border-gray-800">
-                    <div class="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
-                    </div>
+                    <img src="/images/logo.png" alt="C Planner" class="w-7 h-7 rounded-lg object-cover">
                     <span class="font-semibold text-white text-sm tracking-tight">C Planner</span>
                 </div>
 
