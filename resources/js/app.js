@@ -20,6 +20,9 @@ document.addEventListener('alpine:init', () => {
             animation: 150,
             ghostClass: 'opacity-30',
             dragClass: 'rotate-1',
+            delay: 200,
+            delayOnTouchOnly: true,
+            touchStartThreshold: 5,
             onEnd() {
                 el.dispatchEvent(new CustomEvent('sortable-update', { bubbles: true }));
             },
