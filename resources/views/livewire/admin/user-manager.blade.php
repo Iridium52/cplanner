@@ -12,7 +12,7 @@
     @if($showForm)
     <div class="bg-gray-900 border border-gray-800 rounded-xl p-5 mb-6">
         <h3 class="text-sm font-semibold text-white mb-4">{{ $editingId ? 'Edit User' : 'New User' }}</h3>
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <label class="text-xs text-gray-500 mb-1 block">Name</label>
                 <input wire:model="name" type="text"
@@ -51,7 +51,8 @@
 
     {{-- Users table --}}
     <div class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-        <table class="w-full">
+        <div class="overflow-x-auto">
+        <table class="w-full min-w-[600px]">
             <thead class="border-b border-gray-800">
                 <tr>
                     <th class="text-left px-5 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
@@ -106,5 +107,6 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
     </div>
 </div>

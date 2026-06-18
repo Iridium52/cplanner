@@ -22,7 +22,7 @@
                        class="w-10 h-10 rounded-lg border border-gray-700 bg-gray-950 cursor-pointer p-1">
             </div>
         </div>
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <label class="text-xs text-gray-500 mb-1 block">Name</label>
                 <input wire:model="name" type="text"

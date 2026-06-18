@@ -12,9 +12,17 @@
         @livewireStyles
     </head>
     <body class="bg-gray-950 text-gray-100 font-sans antialiased min-h-screen">
-        <div class="flex h-screen overflow-hidden">
+        <div class="flex h-screen overflow-hidden" x-data="{ sidebarOpen: false }">
+
+            {{-- Mobile backdrop --}}
+            <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false"
+                 class="fixed inset-0 bg-black/60 z-20 md:hidden"></div>
+
             {{-- Sidebar --}}
-            <aside class="w-60 flex-shrink-0 bg-gray-900 border-r border-gray-800 flex flex-col">
+            <aside class="fixed inset-y-0 left-0 z-30 w-60 flex-shrink-0 bg-gray-900 border-r border-gray-800 flex flex-col
+                          -translate-x-full md:translate-x-0 md:relative md:!translate-x-0
+                          transition-transform duration-200 ease-in-out"
+                   x-bind:class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen }">
                 {{-- Logo --}}
                 <div class="flex items-center gap-2 px-4 h-14 border-b border-gray-800">
                     <img src="/images/logo.png" alt="C Planner" class="w-7 h-7 rounded-lg object-cover">
@@ -23,12 +31,12 @@
 
                 {{-- Navigation --}}
                 <nav class="flex-1 px-2 py-3 space-y-0.5 overflow-y-auto">
-                    <a href="{{ route('dashboard') }}" wire:navigate
+                    <a href="{{ route('dashboard') }}" wire:navigate @click="sidebarOpen = false"
                        class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors {{ request()->routeIs('dashboard') ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-gray-100 hover:bg-gray-800' }}">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                         Dashboard
                     </a>
-                    <a href="{{ route('flagged-tasks') }}" wire:navigate
+                    <a href="{{ route('flagged-tasks') }}" wire:navigate @click="sidebarOpen = false"
                        class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors {{ request()->routeIs('flagged-tasks') ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-gray-100 hover:bg-gray-800' }}">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6H12.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>
                         Flagged Tasks
@@ -38,12 +46,12 @@
                     <div class="pt-3 pb-1 px-3">
                         <span class="text-xs font-medium text-gray-600 uppercase tracking-wider">Admin</span>
                     </div>
-                    <a href="{{ route('admin.users') }}"
+                    <a href="{{ route('admin.users') }}" @click="sidebarOpen = false"
                        class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors {{ request()->routeIs('admin.users') ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-gray-100 hover:bg-gray-800' }}">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         Users
                     </a>
-                    <a href="{{ route('admin.project-types') }}"
+                    <a href="{{ route('admin.project-types') }}" @click="sidebarOpen = false"
                        class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors {{ request()->routeIs('admin.project-types') ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-gray-100 hover:bg-gray-800' }}">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
                         Project Types
@@ -84,13 +92,22 @@
             </aside>
 
             {{-- Main content --}}
-            <div class="flex-1 flex flex-col overflow-hidden">
-                {{-- Top bar --}}
-                @if(isset($header))
-                <header class="flex-shrink-0 h-14 bg-gray-900 border-b border-gray-800 flex items-center px-6 gap-4">
-                    {{ $header }}
+            <div class="flex-1 flex flex-col overflow-hidden min-w-0">
+                {{-- Top bar (always rendered for hamburger) --}}
+                <header class="flex-shrink-0 h-14 bg-gray-900 border-b border-gray-800 flex items-center px-4 gap-3">
+                    <button @click="sidebarOpen = !sidebarOpen"
+                            class="md:hidden flex-shrink-0 p-1.5 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-colors"
+                            aria-label="Toggle menu">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                    @if(isset($header))
+                    <div class="flex-1 flex items-center gap-4 min-w-0">{{ $header }}</div>
+                    @else
+                    <div class="flex-1"></div>
+                    @endif
                 </header>
-                @endif
 
                 {{-- Content --}}
                 <main class="flex-1 overflow-y-auto">

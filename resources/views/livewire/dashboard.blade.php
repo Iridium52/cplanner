@@ -47,8 +47,8 @@
     @endif
 
     {{-- Search + Status Filters --}}
-    <div class="flex gap-3 mb-6">
-        <div class="relative flex-1 max-w-xs">
+    <div class="flex flex-col sm:flex-row gap-3 mb-6">
+        <div class="relative flex-1 sm:max-w-xs">
             <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35"/></svg>
             <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search projects..."
                    class="w-full bg-gray-900 border border-gray-700 text-gray-100 text-sm rounded-lg pl-9 pr-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent placeholder-gray-600">

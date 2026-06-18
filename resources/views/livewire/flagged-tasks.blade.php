@@ -64,7 +64,8 @@
         </div>
     @else
         <div class="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
-            <table class="w-full text-sm">
+            <div class="overflow-x-auto">
+            <table class="w-full text-sm min-w-[500px]">
                 <thead>
                     <tr class="border-b border-gray-800">
                         <th class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider px-4 py-3">Task</th>
@@ -112,6 +113,7 @@
                     @endforeach
                 </tbody>
             </table>
+            </div>
         </div>
     @endif
 </div>

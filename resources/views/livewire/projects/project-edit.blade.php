@@ -13,7 +13,7 @@
 
         {{-- Form body --}}
         <div class="p-6 space-y-5">
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="col-span-2">
                     <label class="block text-sm text-gray-400 mb-1.5">Project Name</label>
                     <input wire:model="name" type="text" autofocus
@@ -34,7 +34,7 @@
                           class="w-full bg-gray-950 border border-gray-700 text-white rounded-lg px-3 py-2.5 text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"></textarea>
             </div>
 
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                     <label class="block text-sm text-gray-400 mb-1.5">Type</label>
                     <select wire:model="type_id"

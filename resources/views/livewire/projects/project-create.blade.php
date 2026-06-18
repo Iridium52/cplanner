@@ -13,7 +13,7 @@
 
         {{-- Form body --}}
         <div class="p-6 space-y-5">
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="col-span-2">
                     <label class="block text-sm text-gray-400 mb-1.5">Project Name <span class="text-red-400">*</span></label>
                     <input wire:model.live="name" type="text" autofocus
@@ -37,7 +37,7 @@
                           placeholder="What is this project about?"></textarea>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm text-gray-400 mb-1.5">Project Type</label>
                     <select wire:model="type_id"

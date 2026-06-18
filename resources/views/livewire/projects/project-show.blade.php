@@ -1,8 +1,9 @@
 <div class="flex flex-col h-full" x-data="kanban(@this)" @download-export.window="window.location.href = $event.detail.url">
 
     {{-- Top bar --}}
-    <div class="flex-shrink-0 flex items-center gap-4 px-6 h-14 border-b border-gray-800 bg-gray-900">
-        <div class="flex items-center gap-2.5" x-data="{ open: false }" @keydown.escape.window="open = false" @click.outside="open = false">
+    <div class="flex-shrink-0 border-b border-gray-800 bg-gray-900">
+    <div class="flex items-center gap-2 px-3 h-12 md:h-14 md:px-6 md:gap-4">
+        <div class="flex items-center gap-2.5 flex-shrink-0" x-data="{ open: false }" @keydown.escape.window="open = false" @click.outside="open = false">
             <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
                  style="background-color: {{ $project->color }}">
                 {{ strtoupper(substr($project->key, 0, 2)) }}
@@ -49,69 +50,97 @@
             <span class="text-gray-600 text-xs font-mono">{{ $project->key }}</span>
         </div>
 
-        <div class="flex-1 flex items-center gap-3">
-            {{-- Search --}}
-            <div class="relative">
-                <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35"/></svg>
-                <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search tasks..."
-                       class="bg-gray-800 border border-gray-700 text-gray-100 text-xs rounded-lg pl-8 pr-3 py-1.5 w-52 focus:ring-1 focus:ring-indigo-500 focus:border-transparent placeholder-gray-600">
-            </div>
+        <div class="flex-1"></div>
 
-            <select wire:model.live="filterType"
-                    class="bg-gray-800 border border-gray-700 text-gray-300 text-xs rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-indigo-500 focus:border-transparent">
-                <option value="">All types</option>
-                <option value="bug">Bug</option>
-                <option value="feature">Feature</option>
-                <option value="improvement">Improvement</option>
-                <option value="chore">Chore</option>
-                <option value="question">Question</option>
-            </select>
-
-            <select wire:model.live="filterPriority"
-                    class="bg-gray-800 border border-gray-700 text-gray-300 text-xs rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-indigo-500 focus:border-transparent">
-                <option value="">All priorities</option>
-                <option value="critical">Critical</option>
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
-            </select>
+        {{-- Search: desktop only (mobile row below) --}}
+        <div class="hidden md:block relative">
+            <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35"/></svg>
+            <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search tasks..."
+                   class="bg-gray-800 border border-gray-700 text-gray-100 text-xs rounded-lg pl-8 pr-3 py-1.5 w-52 focus:ring-1 focus:ring-indigo-500 focus:border-transparent placeholder-gray-600">
         </div>
 
+        {{-- Filters: desktop only --}}
+        <select wire:model.live="filterType"
+                class="hidden md:block bg-gray-800 border border-gray-700 text-gray-300 text-xs rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-indigo-500 focus:border-transparent">
+            <option value="">All types</option>
+            <option value="bug">Bug</option>
+            <option value="feature">Feature</option>
+            <option value="improvement">Improvement</option>
+            <option value="chore">Chore</option>
+            <option value="question">Question</option>
+        </select>
+
+        <select wire:model.live="filterPriority"
+                class="hidden md:block bg-gray-800 border border-gray-700 text-gray-300 text-xs rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-indigo-500 focus:border-transparent">
+            <option value="">All priorities</option>
+            <option value="critical">Critical</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+        </select>
+
         {{-- View toggle --}}
-        <div class="flex items-center bg-gray-800 rounded-lg p-0.5 border border-gray-700">
+        <div class="flex items-center bg-gray-800 rounded-lg p-0.5 border border-gray-700 flex-shrink-0">
             <button wire:click="$set('view','kanban')"
-                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs transition-colors {{ $view === 'kanban' ? 'bg-gray-700 text-white' : 'text-gray-500 hover:text-gray-300' }}">
+                    class="flex items-center gap-1.5 px-2 md:px-3 py-1.5 rounded-md text-xs transition-colors {{ $view === 'kanban' ? 'bg-gray-700 text-white' : 'text-gray-500 hover:text-gray-300' }}">
                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="4" height="16" rx="1"/></svg>
-                Kanban
+                <span class="hidden sm:inline">Kanban</span>
             </button>
             <button wire:click="$set('view','list')"
-                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs transition-colors {{ $view === 'list' ? 'bg-gray-700 text-white' : 'text-gray-500 hover:text-gray-300' }}">
+                    class="flex items-center gap-1.5 px-2 md:px-3 py-1.5 rounded-md text-xs transition-colors {{ $view === 'list' ? 'bg-gray-700 text-white' : 'text-gray-500 hover:text-gray-300' }}">
                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
-                List
+                <span class="hidden sm:inline">List</span>
             </button>
         </div>
 
         {{-- Export --}}
         <button wire:click="openExportModal"
-                class="flex items-center gap-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 hover:text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
+                class="flex items-center gap-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 hover:text-white text-xs font-medium px-2 md:px-3 py-1.5 rounded-lg transition-colors flex-shrink-0">
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
             </svg>
-            Export
+            <span class="hidden md:inline">Export</span>
         </button>
 
         @if(auth()->user()->isAdmin())
         <button wire:click="$set('showNewTaskModal', true)"
-                class="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
+                class="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium px-2 md:px-3 py-1.5 rounded-lg transition-colors flex-shrink-0">
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-            New Task
+            <span class="hidden md:inline">New Task</span>
         </button>
         <a href="{{ route('projects.settings', $project) }}" wire:navigate
-           class="p-1.5 text-gray-500 hover:text-gray-300 transition-colors rounded-lg hover:bg-gray-800">
+           class="p-1.5 text-gray-500 hover:text-gray-300 transition-colors rounded-lg hover:bg-gray-800 flex-shrink-0">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
         </a>
         @endif
     </div>
+
+    {{-- Mobile search + filter row --}}
+    <div class="flex items-center gap-2 px-3 pb-2 md:hidden">
+        <div class="relative flex-1">
+            <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35"/></svg>
+            <input wire:model.live.debounce.300ms="search" type="text" placeholder="Search tasks..."
+                   class="w-full bg-gray-800 border border-gray-700 text-gray-100 text-xs rounded-lg pl-8 pr-3 py-1.5 focus:ring-1 focus:ring-indigo-500 focus:border-transparent placeholder-gray-600">
+        </div>
+        <select wire:model.live="filterType"
+                class="bg-gray-800 border border-gray-700 text-gray-300 text-xs rounded-lg px-2 py-1.5 focus:ring-1 focus:ring-indigo-500 focus:border-transparent">
+            <option value="">All types</option>
+            <option value="bug">Bug</option>
+            <option value="feature">Feature</option>
+            <option value="improvement">Improvement</option>
+            <option value="chore">Chore</option>
+            <option value="question">Question</option>
+        </select>
+        <select wire:model.live="filterPriority"
+                class="bg-gray-800 border border-gray-700 text-gray-300 text-xs rounded-lg px-2 py-1.5 focus:ring-1 focus:ring-indigo-500 focus:border-transparent">
+            <option value="">All priorities</option>
+            <option value="critical">Critical</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+        </select>
+    </div>
+    </div>{{-- end top bar wrapper --}}
 
     {{-- Category Filter Bar --}}
     @if($project->categories->isNotEmpty())
@@ -378,7 +407,7 @@
             <span class="text-xs text-gray-600 ml-auto">{{ $listTasks->count() }} task{{ $listTasks->count() !== 1 ? 's' : '' }}</span>
         </div>
 
-        <div class="flex-1 overflow-y-auto">
+        <div class="flex-1 overflow-y-auto overflow-x-auto">
         @php
             $sortIcon = function(string $col) use ($listSortColumn, $listSortDir): string {
                 if ($listSortColumn !== $col) return '<svg class="w-3 h-3 text-gray-700 group-hover/th:text-gray-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>';
@@ -387,7 +416,7 @@
                     : '<svg class="w-3 h-3 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>';
             };
         @endphp
-        <table class="w-full">
+        <table class="w-full min-w-[700px]">
             <thead class="sticky top-0 bg-gray-950 border-b border-gray-800 z-10">
                 <tr>
                     <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider w-20">

@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @layer base {
+    [x-cloak] { display: none !important; }
     * {
         scrollbar-width: thin;
         scrollbar-color: #374151 transparent;
