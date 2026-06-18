@@ -246,7 +246,7 @@
     <div class="flex-1 overflow-x-auto overflow-y-hidden">
         <div class="flex gap-4 p-6 h-full min-w-max">
             @foreach($statuses as $status)
-            <div class="flex flex-col w-72 flex-shrink-0 group/col">
+            <div class="flex flex-col w-72 flex-shrink-0 group/col" wire:key="col-{{ $status->id }}">
                 {{-- Column header --}}
                 <div class="flex items-center justify-between mb-3">
                     <div class="flex items-center gap-2">
@@ -267,6 +267,7 @@
                      @sortable-update="updatePositions">
                     @foreach(($tasksByStatus[$status->id] ?? collect()) as $task)
                     <div class="bg-gray-900 border border-gray-800 hover:border-gray-600 rounded-xl p-3.5 cursor-pointer transition-all hover:shadow-lg hover:shadow-black/20 group"
+                         wire:key="task-{{ $task->id }}"
                          data-task-id="{{ $task->id }}"
                          wire:click="openTask({{ $task->id }})"
                          x-sortable-item>
