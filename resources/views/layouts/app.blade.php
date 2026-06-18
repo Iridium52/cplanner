@@ -16,13 +16,13 @@
 
             {{-- Mobile backdrop --}}
             <div x-show="sidebarOpen" x-cloak @click="sidebarOpen = false"
-                 class="fixed inset-0 bg-black/60 z-20 md:hidden"></div>
+                 class="fixed inset-0 bg-black/60 z-20 md:hidden cursor-pointer"></div>
 
             {{-- Sidebar --}}
             <aside class="fixed inset-y-0 left-0 z-30 w-60 flex-shrink-0 bg-gray-900 border-r border-gray-800 flex flex-col
-                          -translate-x-full md:translate-x-0 md:relative md:!translate-x-0
+                          md:relative md:!translate-x-0
                           transition-transform duration-200 ease-in-out"
-                   x-bind:class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen }">
+                   :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
                 {{-- Logo --}}
                 <div class="flex items-center gap-2 px-4 h-14 border-b border-gray-800">
                     <img src="/images/logo.png" alt="C Planner" class="w-7 h-7 rounded-lg object-cover">
