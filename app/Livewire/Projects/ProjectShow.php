@@ -414,6 +414,11 @@ class ProjectShow extends Component
         $statuses = $this->project->statuses;
         $users    = \App\Models\User::all(['id', 'name', 'avatar_color']);
 
+        $siblingProjects = Project::where('type_id', $this->project->type_id)
+            ->where('id', '!=', $this->project->id)
+            ->orderBy('name')
+            ->get(['id', 'name', 'key', 'color']);
+
         if ($this->view === 'list') {
             $tasksByStatus = collect();
             $listTasks     = $this->getListTasks();
@@ -422,7 +427,7 @@ class ProjectShow extends Component
             $listTasks     = collect();
         }
 
-        return view('livewire.projects.project-show', compact('tasksByStatus', 'listTasks', 'statuses', 'users'))
+        return view('livewire.projects.project-show', compact('tasksByStatus', 'listTasks', 'statuses', 'users', 'siblingProjects'))
             ->layout('layouts.app', ['title' => $this->project->name]);
     }
 }

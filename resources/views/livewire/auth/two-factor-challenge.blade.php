@@ -45,6 +45,12 @@
                 <span wire:loading.remove>Verify</span>
                 <span wire:loading>Verifying...</span>
             </button>
+
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input wire:model="rememberDevice" type="checkbox"
+                       class="rounded bg-gray-800 border-gray-600 text-indigo-600 focus:ring-indigo-500">
+                <span class="text-sm text-gray-400">Remember this device for 7 days</span>
+            </label>
         </div>
 
         <div class="mt-4 space-y-2 border-t border-gray-800 pt-4">

@@ -82,4 +82,47 @@
         <a href="{{ route('two-factor.setup') }}" class="text-indigo-400 hover:text-indigo-300 text-sm transition-colors">Set up 2FA →</a>
         @endif
     </div>
+
+    {{-- Active sessions --}}
+    <div class="bg-gray-900 border border-gray-800 rounded-xl p-5">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold text-white">Active Sessions</h3>
+            @if($sessions->where('is_current', false)->count() > 0)
+            <button wire:click="revokeAllOtherSessions"
+                    class="text-xs text-red-400 hover:text-red-300 transition-colors">
+                Revoke all other sessions
+            </button>
+            @endif
+        </div>
+        <div class="space-y-1">
+            @forelse($sessions as $session)
+            <div class="flex items-center justify-between py-2.5 {{ !$loop->last ? 'border-b border-gray-800' : '' }}">
+                <div class="flex items-start gap-3">
+                    <div class="mt-0.5 text-gray-500">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm text-white">
+                            {{ $session->browser }} on {{ $session->os }}
+                            @if($session->is_current)
+                                <span class="ml-2 text-xs bg-indigo-500/20 text-indigo-400 px-1.5 py-0.5 rounded">Current</span>
+                            @endif
+                        </p>
+                        <p class="text-xs text-gray-500 mt-0.5">{{ $session->ip }} &middot; {{ $session->last_activity }}</p>
+                    </div>
+                </div>
+                @if(!$session->is_current)
+                <button wire:click="revokeSession('{{ $session->id }}')"
+                        class="text-xs text-red-400 hover:text-red-300 transition-colors flex-shrink-0 ml-4">
+                    Revoke
+                </button>
+                @endif
+            </div>
+            @empty
+            <p class="text-sm text-gray-500">No active sessions found.</p>
+            @endforelse
+        </div>
+    </div>
 </div>

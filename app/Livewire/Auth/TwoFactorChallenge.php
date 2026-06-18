@@ -5,6 +5,7 @@ namespace App\Livewire\Auth;
 use App\Mail\EmailOtpMail;
 use App\Models\EmailOtpToken;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use PragmaRX\Google2FA\Google2FA;
@@ -17,6 +18,7 @@ class TwoFactorChallenge extends Component
     public bool $otpSent = false;
     public string $recoveryCode = '';
     public bool $useRecovery = false;
+    public bool $rememberDevice = false;
 
     public function verify(): void
     {
@@ -107,6 +109,17 @@ class TwoFactorChallenge extends Component
     private function markVerified(): void
     {
         session(['two_factor_verified' => true]);
+
+        if ($this->rememberDevice) {
+            $user = Auth::user();
+            $value = $user->id . '|' . hash_hmac(
+                'sha256',
+                $user->id . '|' . $user->two_factor_confirmed_at,
+                config('app.key')
+            );
+            Cookie::queue('2fa_remember', $value, 10080); // 7 days
+        }
+
         $this->redirectIntended(default: route('dashboard'), navigate: true);
     }
 

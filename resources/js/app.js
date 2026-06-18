@@ -1,6 +1,17 @@
 import './bootstrap';
 import Sortable from 'sortablejs';
 
+document.addEventListener('livewire:init', () => {
+    Livewire.hook('request', ({ fail }) => {
+        fail(({ status, preventDefault }) => {
+            if (status === 419) {
+                preventDefault();
+                window.location.href = '/login';
+            }
+        });
+    });
+});
+
 document.addEventListener('alpine:init', () => {
     // Kanban board columns (cross-column drag)
     window.Alpine.directive('sortable', (el, { expression }, { cleanup }) => {
