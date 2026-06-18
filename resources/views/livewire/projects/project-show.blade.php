@@ -270,16 +270,15 @@
                          data-task-id="{{ $task->id }}"
                          wire:click="openTask({{ $task->id }})"
                          x-sortable-item>
-                        {{-- Drag handle --}}
-                        <div x-sortable-handle
-                             class="flex justify-center mb-2 -mt-1 cursor-grab active:cursor-grabbing touch-none">
-                            <svg class="w-4 h-4 text-gray-700 group-hover:text-gray-500 transition-colors" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M7 4a1 1 0 100 2 1 1 0 000-2zM7 9a1 1 0 100 2 1 1 0 000-2zM7 14a1 1 0 100 2 1 1 0 000-2zM13 4a1 1 0 100 2 1 1 0 000-2zM13 9a1 1 0 100 2 1 1 0 000-2zM13 14a1 1 0 100 2 1 1 0 000-2z"/>
-                            </svg>
-                        </div>
                         {{-- Type + task number --}}
                         <div class="flex items-center justify-between mb-2">
                             <div class="flex items-center gap-1.5">
+                                <div x-sortable-handle
+                                     class="cursor-grab active:cursor-grabbing touch-none flex-shrink-0">
+                                    <svg class="w-3.5 h-3.5 text-gray-700 group-hover:text-gray-500 transition-colors" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M7 4a1 1 0 100 2 1 1 0 000-2zM7 9a1 1 0 100 2 1 1 0 000-2zM7 14a1 1 0 100 2 1 1 0 000-2zM13 4a1 1 0 100 2 1 1 0 000-2zM13 9a1 1 0 100 2 1 1 0 000-2zM13 14a1 1 0 100 2 1 1 0 000-2z"/>
+                                    </svg>
+                                </div>
                                 <span class="text-xs {{ \App\Models\Task::typeColor($task->type) }}">
                                     @if($task->type === 'bug') 🐛
                                     @elseif($task->type === 'feature') ✨
